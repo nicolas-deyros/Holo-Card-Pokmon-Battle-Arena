@@ -1,0 +1,6 @@
+{
+  "name": "Pokémon Card Battle Arena",
+  "description": "An interactive Pokémon Card Game application where you can battle against a computer opponent, explore Pokémon evolution trees, and discover your favorite Pokémon with a dynamic search.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
