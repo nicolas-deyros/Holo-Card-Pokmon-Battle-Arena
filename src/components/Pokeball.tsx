@@ -40,12 +40,12 @@ export const Pokeball: React.FC<PokeballProps> = ({ onAnimationEnd }) => {
         .animate-open { animation: pokeball-open 0.5s ease-in forwards; }
       `}</style>
       <div className={`relative w-24 h-24 ${animationClass}`}>
-        <div className="w-full h-1/2 bg-red-500 rounded-t-full border-4 border-black"></div>
-        <div className="w-full h-1/2 bg-white rounded-b-full border-4 border-black"></div>
+        <div className="w-full h-1/2 bg-red-500 rounded-t-full border-4 border-black" />
+        <div className="w-full h-1/2 bg-white rounded-b-full border-4 border-black" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full border-4 border-black flex items-center justify-center">
-            <div className="w-4 h-4 bg-white rounded-full border-2 border-black"></div>
+            <div className="w-4 h-4 bg-white rounded-full border-2 border-black" />
         </div>
-        <div className="absolute top-1/2 left-0 w-full h-2 bg-black -translate-y-1/2"></div>
+        <div className="absolute top-1/2 left-0 w-full h-2 bg-black -translate-y-1/2" />
       </div>
     </div>
   );

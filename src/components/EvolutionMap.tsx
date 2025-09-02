@@ -243,7 +243,7 @@ export const EvolutionMap: React.FC<EvolutionMapProps> = ({ pokemonName, onBack 
 
           <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
             <div className="flex items-center gap-2 mb-6">
-                <div className="w-1 h-6 bg-yellow-400 rounded-full"></div>
+                <div className="w-1 h-6 bg-yellow-400 rounded-full" />
                 <h2 className="text-2xl font-bold">Details</h2>
             </div>
             

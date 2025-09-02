@@ -100,7 +100,7 @@ export async function getPokemonDetails(nameOrId: string | number): Promise<Poke
 }
 
 async function parseEvolutionChain(chain: EvolutionLink): Promise<Pokemon[]> {
-    let evolutionLine: Pokemon[] = [];
+    const evolutionLine: Pokemon[] = [];
     let current = chain;
 
     while (current) {

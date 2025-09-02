@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAllPokemonNames } from '../services/pokeapi';
 
 interface AutocompleteSearchProps {
@@ -18,7 +17,7 @@ export const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({ onSelect
         const names = await getAllPokemonNames();
         setAllPokemon(names);
       } catch (error) {
-        console.error("Failed to load pokemon list", error);
+        console.error('Failed to load pokemon list', error);
       } finally {
         setIsLoading(false);
       }
@@ -51,7 +50,7 @@ export const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({ onSelect
         type="text"
         value={query}
         onChange={handleInputChange}
-        placeholder={isLoading ? "Loading Pokémon..." : "Search Pokémon..."}
+        placeholder={isLoading ? 'Loading Pokémon...' : 'Search Pokémon...'}
         disabled={isLoading}
         className="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-full text-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
       />
