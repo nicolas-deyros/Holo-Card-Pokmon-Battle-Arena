@@ -1,1 +1,5 @@
+# Branch protection check (Node.js for cross-platform compatibility)
+node .husky/branch-check.cjs
+
+# Run linting and formatting  
 npm run pre-commit

@@ -4,6 +4,9 @@ import path from 'path';
 
 export default defineConfig({
   root: path.resolve(__dirname, '..'),
+  esbuild: {
+    jsx: 'automatic',
+  },
   test: {
     globals: true,
     environment: 'jsdom',
