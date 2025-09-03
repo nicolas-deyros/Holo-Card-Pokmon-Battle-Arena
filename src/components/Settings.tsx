@@ -106,14 +106,14 @@ export const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
               <div className="flex items-center justify-between">
                 <label className="text-gray-300">Auto-save Progress</label>
                 <button
-                  onClick={() => updateSetting('autoSave', !settings.autoSave)}
+                  onClick={() => updateSetting('autoSaveTeam', !settings.autoSaveTeam)}
                   className={`relative w-12 h-6 rounded-full transition-colors ${
-                    settings.autoSave ? 'bg-green-600' : 'bg-gray-600'
+                    settings.autoSaveTeam ? 'bg-green-600' : 'bg-gray-600'
                   }`}
                 >
                   <div
                     className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                      settings.autoSave ? 'translate-x-7' : 'translate-x-1'
+                      settings.autoSaveTeam ? 'translate-x-7' : 'translate-x-1'
                     }`}
                   />
                 </button>

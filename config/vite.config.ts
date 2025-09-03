@@ -7,10 +7,6 @@ export default defineConfig(({ mode }) => {
     return {
       plugins: [react()],
       root: path.resolve(__dirname, '..'),
-      // Enable Rolldown (experimental)
-      experimental: {
-        rolldown: true,
-      } as { rolldown: boolean },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
