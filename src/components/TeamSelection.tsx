@@ -72,7 +72,7 @@ export const TeamSelection: React.FC<TeamSelectionProps> = ({
   onTeamConfirm,
   onBack,
 }) => {
-  const [team, setTeam] = useState<Pokemon[]>([]);
+  const [team, setTeam] = useState<(Pokemon | null)[]>(() => Array(TEAM_SIZE).fill(null));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [popularPokemon, setPopularPokemon] = useState<Pokemon[]>([]);
@@ -82,34 +82,51 @@ export const TeamSelection: React.FC<TeamSelectionProps> = ({
 
   const addPokemonToTeam = useCallback(
     async (name: string, targetIndex?: number) => {
-      if (team.length >= TEAM_SIZE && typeof targetIndex === 'undefined') {
-        setError(`You can only have ${TEAM_SIZE} Pokémon in your team.`);
-        return;
-      }
-      if (team.some(p => p.name === name)) {
-        setError(`${name} is already in your team.`);
-        return;
-      }
+      setTeam(currentTeam => {
+        const filledSlots = currentTeam.filter(Boolean).length;
+        if (filledSlots >= TEAM_SIZE && typeof targetIndex === 'undefined') {
+          setError(`You can only have ${TEAM_SIZE} Pokémon in your team.`);
+          return currentTeam;
+        }
+        if (currentTeam.some(p => p?.name === name)) {
+          setError(`${name} is already in your team.`);
+          return currentTeam;
+        }
+
+        // Clear any previous error
+        setError('');
+
+        // We'll update with the actual Pokemon details after fetching
+        return currentTeam;
+      });
 
       setIsLoading(true);
-      setError('');
       try {
         const pokemonDetails = await getPokemonDetails(name);
         if (pokemonDetails) {
           setTeam(currentTeam => {
+            // Double-check the constraints again since this is async
+            const filledSlots = currentTeam.filter(Boolean).length;
+            if (filledSlots >= TEAM_SIZE && typeof targetIndex === 'undefined') {
+              setError(`You can only have ${TEAM_SIZE} Pokémon in your team.`);
+              return currentTeam;
+            }
+            if (currentTeam.some(p => p?.name === name)) {
+              setError(`${name} is already in your team.`);
+              return currentTeam;
+            }
+
             const newTeam = [...currentTeam];
             if (typeof targetIndex !== 'undefined') {
               newTeam[targetIndex] = pokemonDetails;
             } else {
               // Find first empty slot
-              const emptyIndex = newTeam.findIndex(p => !p);
+              const emptyIndex = newTeam.findIndex(p => p === null);
               if (emptyIndex !== -1) {
                 newTeam[emptyIndex] = pokemonDetails;
-              } else {
-                newTeam.push(pokemonDetails);
               }
             }
-            return newTeam.slice(0, TEAM_SIZE);
+            return newTeam;
           });
         } else {
           setError(`Could not find details for ${name}.`);
@@ -120,26 +137,42 @@ export const TeamSelection: React.FC<TeamSelectionProps> = ({
         setIsLoading(false);
       }
     },
-    [team]
+    [] // Remove team dependency to prevent recreation
   );
 
   useEffect(() => {
-    if (initialPokemonName) {
-      addPokemonToTeam(initialPokemonName);
-    }
+    const initializeTeam = async () => {
+      if (initialPokemonName) {
+        setIsLoading(true);
+        try {
+          const pokemonDetails = await getPokemonDetails(initialPokemonName);
+          if (pokemonDetails) {
+            setTeam(currentTeam => {
+              const newTeam = [...currentTeam];
+              newTeam[0] = pokemonDetails; // Put initial Pokemon in first slot
+              return newTeam;
+            });
+          }
+        } catch (_err) {
+          setError('Failed to fetch initial Pokémon details.');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
 
     const fetchPopular = async () => {
       const promises = POPULAR_POKEMON.map(name => getPokemonDetails(name));
       const results = await Promise.all(promises);
       setPopularPokemon(results.filter((p): p is Pokemon => p !== null));
     };
+
+    initializeTeam();
     fetchPopular();
-  }, [initialPokemonName, addPokemonToTeam]);
+  }, [initialPokemonName]); // Only depend on initialPokemonName
 
   const handleRemovePokemon = (id: number) => {
-    setTeam(
-      currentTeam => currentTeam.map(p => (p?.id === id ? null : p)).filter(Boolean) as Pokemon[]
-    );
+    setTeam(currentTeam => currentTeam.map(p => (p?.id === id ? null : p)));
   };
 
   const handleDragStart = (
@@ -179,17 +212,11 @@ export const TeamSelection: React.FC<TeamSelectionProps> = ({
     if (dragSourceType.current === 'team' && dragSourceIndex.current !== null) {
       // Reordering from within the team
       const sourceIndex = dragSourceIndex.current;
-      // If there was an item at the target, move it to the source, otherwise remove the source
+      // If there was an item at the target, move it to the source, otherwise make the source null
       newTeam[sourceIndex] = displacedItem || null;
-    } else if (dragSourceType.current === 'popular' && newTeam.length > TEAM_SIZE) {
-      // Adding from popular list, remove last item if team is full
-      // This is a simplistic way to handle overflow, better logic might be needed
-      newTeam.pop();
     }
 
-    // Filter out nulls if you want a compact list, or keep them for fixed slots.
-    // Let's keep them for fixed slots.
-    setTeam(newTeam.slice(0, TEAM_SIZE));
+    setTeam(newTeam);
 
     setDraggedItem(null);
     dragSourceIndex.current = null;
@@ -209,10 +236,11 @@ export const TeamSelection: React.FC<TeamSelectionProps> = ({
 
       <h1 className="text-4xl font-bold text-center mb-2">Build Your Team</h1>
       <p className="text-slate-300 text-center mb-8">
-        Choose {TEAM_SIZE} Pokémon. Drag and drop to build your team or reorder.
+        Choose {TEAM_SIZE} Pokémon for an intense 2v2 battle. Drag and drop to build your team or
+        reorder.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-8 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center gap-8 mb-8 max-w-2xl mx-auto">
         {Array.from({ length: TEAM_SIZE }).map((_, index) => (
           <TeamSlot
             key={team[index]?.id || `empty-${index}`}
