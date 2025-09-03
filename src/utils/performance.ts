@@ -100,7 +100,10 @@ export function useRenderPerformance(
 /**
  * Hook for throttling expensive operations
  */
-export function useThrottle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
+  callback: T,
+  delay: number
+): T {
   const lastRun = useRef<number>(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -148,7 +151,15 @@ export function getMemoryUsage(): {
   jsHeapSizeLimit?: number;
 } {
   if (typeof performance !== 'undefined' && 'memory' in performance) {
-    const memory = (performance as any).memory;
+    const memory = (
+      performance as unknown as {
+        memory: {
+          usedJSHeapSize: number;
+          totalJSHeapSize: number;
+          jsHeapSizeLimit: number;
+        };
+      }
+    ).memory;
     return {
       usedJSHeapSize: memory.usedJSHeapSize,
       totalJSHeapSize: memory.totalJSHeapSize,
@@ -207,7 +218,11 @@ export class FPSMonitor {
 /**
  * Hook for FPS monitoring
  */
-export function useFPSMonitor(): { fps: number; isMonitoring: boolean; toggle: () => void } {
+export function useFPSMonitor(): {
+  fps: number;
+  isMonitoring: boolean;
+  toggle: () => void;
+} {
   const [fps, setFPS] = useState(0);
   const [isMonitoring, setIsMonitoring] = useState(false);
   const monitorRef = useRef<FPSMonitor | null>(null);

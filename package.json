@@ -1,74 +1,77 @@
 {
-	"name": "pokemon-card-battle-arena",
-	"private": true,
-	"version": "1.0.0",
-	"type": "module",
-	"scripts": {
-		"dev": "vite --config config/vite.config.ts --open",
-		"build": "vite build --config config/vite.config.ts",
-		"preview": "vite preview --config config/vite.config.ts",
-		"lint": "eslint . --config config/eslint.config.js --ext ts,tsx --report-unused-disable-directives --max-warnings 25",
-		"lint:fix": "eslint . --config config/eslint.config.js --ext ts,tsx --fix",
-		"lint:css": "stylelint '**/*.{css,scss,html}' --config config/.stylelintrc.json",
-		"lint:css:fix": "stylelint '**/*.{css,scss,html}' --config config/.stylelintrc.json --fix",
-		"type-check": "tsc --project config/tsconfig.json --noEmit",
-		"test": "vitest --config config/vitest.config.ts",
-		"test:ui": "vitest --config config/vitest.config.ts --ui",
-		"test:run": "vitest --config config/vitest.config.ts run",
-		"test:coverage": "vitest --config config/vitest.config.ts run --coverage",
-		"format": "prettier --config config/.prettierrc --write .",
-		"format:check": "prettier --config config/.prettierrc --check .",
-		"prepare": "husky",
-		"pre-commit": "lint-staged",
-		"validate": "npm run type-check && npm run lint && npm run test:run"
-	},
-	"dependencies": {
-		"react": "^19.1.0",
-		"react-dom": "^19.1.0"
-	},
-	"devDependencies": {
-		"@commitlint/cli": "^19.5.0",
-		"@commitlint/config-conventional": "^19.5.0",
-		"@eslint/js": "^9.15.0",
-		"@testing-library/jest-dom": "^6.6.3",
-		"@testing-library/react": "^16.1.0",
-		"@testing-library/user-event": "^14.5.2",
-		"@types/node": "^22.14.0",
-		"@types/react": "^19.1.12",
-		"@types/react-dom": "^19.1.9",
-		"@typescript-eslint/eslint-plugin": "^8.17.0",
-		"@typescript-eslint/parser": "^8.17.0",
-		"@vitejs/plugin-react": "^4.3.4",
-		"@vitest/coverage-v8": "^2.1.8",
-		"@vitest/ui": "^2.1.8",
-		"eslint": "^9.15.0",
-		"eslint-plugin-react": "^7.37.2",
-		"eslint-plugin-react-hooks": "^5.0.0",
-		"eslint-plugin-react-refresh": "^0.4.14",
-		"globals": "^15.12.0",
-		"husky": "^9.1.7",
-		"jsdom": "^25.0.1",
-		"lint-staged": "^15.2.10",
-		"prettier": "^3.3.3",
-		"rolldown": "^1.0.0-beta.34",
-		"stylelint": "^16.11.0",
-		"stylelint-config-standard": "^36.0.1",
-		"typescript": "~5.8.2",
-		"typescript-eslint": "^8.17.0",
-		"vite": "^7.1.4",
-		"vitest": "^2.1.8"
-	},
-	"lint-staged": {
-		"*.{ts,tsx}": [
-			"eslint --config config/eslint.config.js --fix",
-			"prettier --config config/.prettierrc --write"
-		],
-		"*.{css,scss,html}": [
-			"stylelint --config config/.stylelintrc.json --fix",
-			"prettier --config config/.prettierrc --write"
-		],
-		"*.{json,md}": [
-			"prettier --config config/.prettierrc --write"
-		]
-	}
+  "name": "pokemon-card-battle-arena",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config config/vite.config.ts --open",
+    "build": "vite build --config config/vite.config.ts",
+    "preview": "vite preview --config config/vite.config.ts",
+    "lint": "eslint . --config config/eslint.config.js --ext ts,tsx --report-unused-disable-directives --max-warnings 25",
+    "lint:fix": "eslint . --config config/eslint.config.js --ext ts,tsx --fix",
+    "lint:css": "stylelint '**/*.{css,scss,html}' --config config/.stylelintrc.json",
+    "lint:css:fix": "stylelint '**/*.{css,scss,html}' --config config/.stylelintrc.json --fix",
+    "type-check": "tsc --project config/tsconfig.json --noEmit",
+    "test": "vitest --config config/vitest.config.ts",
+    "test:ui": "vitest --config config/vitest.config.ts --ui",
+    "test:run": "vitest --config config/vitest.config.ts run",
+    "test:coverage": "vitest --config config/vitest.config.ts run --coverage",
+    "format": "prettier --config config/.prettierrc --write .",
+    "format:check": "prettier --config config/.prettierrc --check .",
+    "new-branch": "node -e \"const name=process.argv[1]; if(!name){console.log('Usage: npm run new-branch <branch-name>'); process.exit(1);} require('child_process').execSync('git checkout -b '+name, {stdio:'inherit'});\"",
+    "safe-push": "node -e \"const branch=require('child_process').execSync('git rev-parse --abbrev-ref HEAD').toString().trim(); if(['main','master'].includes(branch)){console.log('🚫 Cannot push to protected branch:',branch); process.exit(1);} require('child_process').execSync('git push origin '+branch, {stdio:'inherit'});\"",
+    "check-branch": "node -e \"console.log('Current branch:', require('child_process').execSync('git rev-parse --abbrev-ref HEAD').toString().trim());\"",
+    "prepare": "husky",
+    "pre-commit": "lint-staged",
+    "validate": "npm run type-check && npm run lint && npm run test:run"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9.15.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/ui": "^2.1.8",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.12.0",
+    "husky": "^9.1.7",
+    "jsdom": "^25.0.1",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "rolldown": "^1.0.0-beta.34",
+    "stylelint": "^16.11.0",
+    "stylelint-config-standard": "^36.0.1",
+    "typescript": "~5.8.2",
+    "typescript-eslint": "^8.17.0",
+    "vite": "^7.1.4",
+    "vitest": "^2.1.8"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --config config/eslint.config.js --fix",
+      "prettier --config config/.prettierrc --write"
+    ],
+    "*.{css,scss,html}": [
+      "stylelint --config config/.stylelintrc.json --fix",
+      "prettier --config config/.prettierrc --write"
+    ],
+    "*.{json,md}": [
+      "prettier --config config/.prettierrc --write"
+    ]
+  }
 }

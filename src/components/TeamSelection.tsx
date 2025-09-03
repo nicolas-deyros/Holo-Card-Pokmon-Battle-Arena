@@ -134,7 +134,7 @@ export const TeamSelection: React.FC<TeamSelectionProps> = ({
       setPopularPokemon(results.filter((p): p is Pokemon => p !== null));
     };
     fetchPopular();
-  }, [initialPokemonName]); // removed addPokemonToTeam from deps to avoid re-triggering
+  }, [initialPokemonName, addPokemonToTeam]);
 
   const handleRemovePokemon = (id: number) => {
     setTeam(

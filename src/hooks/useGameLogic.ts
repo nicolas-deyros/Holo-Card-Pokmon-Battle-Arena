@@ -36,11 +36,19 @@ async function getComputerMove(computerPokemon: Pokemon, playerPokemon: Pokemon)
 }
 
 type GameAction =
-  | { type: 'START_SUCCESS'; payload: { playerTeam: Pokemon[]; computerTeam: Pokemon[] } }
+  | {
+      type: 'START_SUCCESS';
+      payload: { playerTeam: Pokemon[]; computerTeam: Pokemon[] };
+    }
   | { type: 'ATTACK'; payload: { attack: Attack } }
   | {
       type: 'PROCESS_TURN';
-      payload: { damage: number; log: string; isSuperEffective: boolean; isResisted: boolean };
+      payload: {
+        damage: number;
+        log: string;
+        isSuperEffective: boolean;
+        isResisted: boolean;
+      };
     }
   | { type: 'SWITCH_POKEMON'; payload: { pokemonId: number } }
   | { type: 'FAINT_SWITCH'; payload: { nextComputerPokemon?: Pokemon } }
@@ -114,7 +122,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         const newHp = Math.max(0, (state.player.activePokemon?.hp || 0) - damage);
         return {
           ...state,
-          player: { ...state.player, activePokemon: { ...state.player.activePokemon!, hp: newHp } },
+          player: {
+            ...state.player,
+            activePokemon: { ...state.player.activePokemon!, hp: newHp },
+          },
           log: newLog,
         };
       }
@@ -185,7 +196,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'END_TURN': {
       const nextTurn = state.turn === 'player' ? 'computer' : 'player';
-      return { ...state, turn: nextTurn, isProcessingTurn: false, pendingAttack: undefined };
+      return {
+        ...state,
+        turn: nextTurn,
+        isProcessingTurn: false,
+        pendingAttack: undefined,
+      };
     }
 
     case 'GAME_OVER':
@@ -221,7 +237,11 @@ async function calculateDamage(attack: Attack, _attacker: Pokemon, defender: Pok
   const isSuperEffective = multiplier > 1;
   const isResisted = multiplier < 1;
 
-  return { damage: Math.floor(damage * multiplier), isSuperEffective, isResisted };
+  return {
+    damage: Math.floor(damage * multiplier),
+    isSuperEffective,
+    isResisted,
+  };
 }
 
 export const useGameLogic = (playerTeam: Pokemon[]) => {
@@ -257,7 +277,10 @@ export const useGameLogic = (playerTeam: Pokemon[]) => {
             // Pre-warm the type relations cache for smoother battles
             await Promise.all(Array.from(allTypes).map(t => getTypeRelations(t)));
 
-            dispatch({ type: 'START_SUCCESS', payload: { playerTeam, computerTeam } });
+            dispatch({
+              type: 'START_SUCCESS',
+              payload: { playerTeam, computerTeam },
+            });
           }
         } catch (e) {
           console.error('Failed to set up computer team', e);
@@ -307,7 +330,10 @@ export const useGameLogic = (playerTeam: Pokemon[]) => {
             if (attackerIsPlayer) {
               const nextPokemon = currentGameState.computer.hand.find(p => p.hp > 0);
               if (nextPokemon) {
-                dispatch({ type: 'FAINT_SWITCH', payload: { nextComputerPokemon: nextPokemon } });
+                dispatch({
+                  type: 'FAINT_SWITCH',
+                  payload: { nextComputerPokemon: nextPokemon },
+                });
               } else {
                 dispatch({ type: 'GAME_OVER', payload: { winner: 'player' } });
               }
@@ -331,7 +357,7 @@ export const useGameLogic = (playerTeam: Pokemon[]) => {
       isSubscribed = false;
       clearTimeout(turnTimer);
     };
-  }, [gameState.isProcessingTurn, gameState.pendingAttack]);
+  }, [gameState.isProcessingTurn, gameState.pendingAttack]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Effect for handling turn end after a voluntary switch
   useEffect(() => {
