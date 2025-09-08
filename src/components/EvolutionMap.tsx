@@ -166,9 +166,7 @@ export const EvolutionMap: React.FC<EvolutionMapProps> = ({
                         key={index}
                         className="px-3 py-1 rounded-full text-sm font-bold bg-slate-700 text-white"
                       >
-                        {typeof typeObj === 'string'
-                          ? typeObj.charAt(0).toUpperCase() + typeObj.slice(1)
-                          : typeObj.type.name.charAt(0).toUpperCase() + typeObj.type.name.slice(1)}
+                        {typeObj.type.name.charAt(0).toUpperCase() + typeObj.type.name.slice(1)}
                       </span>
                     ))}
                   </div>
@@ -335,7 +333,7 @@ export const EvolutionMap: React.FC<EvolutionMapProps> = ({
                       <div className="mt-3 text-center">
                         <h3 className="text-white font-bold text-lg capitalize">{p.name}</h3>
                         <p className="text-slate-400 text-sm">
-                          Level {p.level || (index === 0 ? '1-15' : index === 1 ? '16-35' : '36+')}
+                          Level {index === 0 ? '1-15' : index === 1 ? '16-35' : '36+'}
                         </p>
                       </div>
                     </div>
