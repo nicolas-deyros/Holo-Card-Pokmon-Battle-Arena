@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getEvolutionLine, getPokemonDetails, getRelatedPokemonByType } from '../services/pokeapi';
 import { LoadingSpinner } from './LoadingSpinner';
 import { DetailSection } from './DetailSection';
-import { SubsectionTitle } from './SubsectionTitle';
 import { PokemonCard } from './PokemonCard';
 import { RadarChart } from './RadarChart';
 import type { Pokemon } from '../types';
@@ -274,47 +273,122 @@ export const EvolutionMap: React.FC<EvolutionMapProps> = ({
           )}
         </DetailSection>
 
-        {/* Evolution Chain Section */}
+        {/* Evolution Chain Section - Enhanced Display */}
         {evolutionChain.length > 0 && (
-          <DetailSection title="Evolution Line" className="">
-            <SubsectionTitle
-              description={`Evolution chain for ${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}`}
-            >
-              {evolutionChain.length === 1 ? 'Single Stage Pokemon' : 'Evolution Stages'}
-            </SubsectionTitle>
+          <div className="bg-gradient-to-br from-slate-900/70 to-slate-800/70 rounded-2xl p-8 shadow-2xl border border-slate-700/50">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-4">
+                {evolutionChain.length === 1 ? 'Single Stage Pokémon' : 'Evolution Chain'}
+              </h2>
+              <p className="text-slate-300 text-lg">
+                {evolutionChain.length === 1
+                  ? `${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} doesn't evolve`
+                  : `Discover the evolution journey of ${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}`}
+              </p>
+            </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            {/* Evolution Cards Display */}
+            <div className="flex flex-col lg:flex-row gap-8 justify-center items-center">
               {evolutionChain.map((p, index) => {
+                const isCurrentPokemon = p.name === pokemonName;
                 return (
                   <React.Fragment key={p.id}>
-                    <div className="flex flex-col items-center">
-                      <div className="font-medium text-slate-400 mb-2">{getStageText(index)}</div>
+                    <div className="flex flex-col items-center group">
+                      {/* Stage Label */}
+                      <div className="mb-4 text-center">
+                        <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg px-4 py-2 border border-blue-400/30">
+                          <span className="text-blue-300 font-bold text-lg">
+                            {getStageText(index)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Pokemon Card */}
                       <div
-                        className={`cursor-pointer transition-transform hover:scale-105 ${
-                          p.name === pokemonName ? 'ring-2 ring-yellow-400 rounded-lg' : ''
-                        }`}
+                        className={`
+													cursor-pointer transition-all duration-300 transform group-hover:scale-110
+													${
+                            isCurrentPokemon
+                              ? 'ring-4 ring-yellow-400 ring-opacity-80 rounded-xl shadow-lg shadow-yellow-400/30'
+                              : 'hover:ring-2 hover:ring-blue-400 hover:ring-opacity-60 rounded-xl'
+                          }
+												`}
                         onClick={() => handlePokemonClick(p.name)}
                       >
-                        <PokemonCard
-                          pokemon={p}
-                          isActive={p.name === pokemonName}
-                          isPlayer={true}
-                          displayMode="compact"
-                          isStatic={true}
-                        />
+                        <div className="relative">
+                          <PokemonCard
+                            pokemon={p}
+                            isActive={isCurrentPokemon}
+                            isPlayer={true}
+                            displayMode="compact"
+                            isStatic={true}
+                          />
+                          {isCurrentPokemon && (
+                            <div className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                              Current
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Pokemon Name and Level Info */}
+                      <div className="mt-3 text-center">
+                        <h3 className="text-white font-bold text-lg capitalize">{p.name}</h3>
+                        <p className="text-slate-400 text-sm">
+                          Level {p.level || (index === 0 ? '1-15' : index === 1 ? '16-35' : '36+')}
+                        </p>
                       </div>
                     </div>
+
+                    {/* Evolution Arrow */}
                     {index < evolutionChain.length - 1 && (
-                      <div className="hidden sm:block text-4xl text-yellow-400 mx-4">→</div>
-                    )}
-                    {index < evolutionChain.length - 1 && (
-                      <div className="sm:hidden text-4xl text-yellow-400 my-2">↓</div>
+                      <div className="flex flex-col items-center">
+                        <div className="hidden lg:flex items-center text-6xl text-gradient">
+                          <span className="animate-pulse text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                            →
+                          </span>
+                        </div>
+                        <div className="lg:hidden flex flex-col items-center text-4xl">
+                          <span className="animate-pulse text-transparent bg-clip-text bg-gradient-to-b from-yellow-400 to-orange-500">
+                            ↓
+                          </span>
+                        </div>
+                        <div className="text-xs text-slate-500 mt-2 font-medium">EVOLVES</div>
+                      </div>
                     )}
                   </React.Fragment>
                 );
               })}
             </div>
-          </DetailSection>
+
+            {/* Evolution Info */}
+            {evolutionChain.length > 1 && (
+              <div className="mt-8 p-6 bg-slate-800/50 rounded-xl border border-slate-600/30">
+                <h4 className="text-yellow-300 font-bold text-lg mb-3">Evolution Facts</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div className="text-center">
+                    <div className="text-blue-400 font-bold">Stages</div>
+                    <div className="text-white">{evolutionChain.length}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-green-400 font-bold">Types</div>
+                    <div className="text-white">
+                      {
+                        [...new Set(evolutionChain.flatMap(p => p.types.map(t => t.type.name)))]
+                          .length
+                      }
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-purple-400 font-bold">Max HP</div>
+                    <div className="text-white">
+                      {Math.max(...evolutionChain.map(p => p.maxHp))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Related Pokémon using Holo card */}

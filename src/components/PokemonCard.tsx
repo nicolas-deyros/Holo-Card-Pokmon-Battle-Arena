@@ -133,6 +133,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         style={cardStyle}
         className={`holo-card ${isFainted ? 'grayscale opacity-60' : ''} ${isHit ? 'animate-shake' : ''}`}
       >
+        <div className="holo-card-pokemon-image" />
         <div className="holo-card-content">
           <div className="holo-card-header">
             <div>
