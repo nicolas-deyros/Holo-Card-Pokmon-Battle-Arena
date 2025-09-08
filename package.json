@@ -9,8 +9,8 @@
     "preview": "vite preview --config config/vite.config.ts",
     "lint": "eslint . --config config/eslint.config.js --ext ts,tsx --report-unused-disable-directives --max-warnings 25",
     "lint:fix": "eslint . --config config/eslint.config.js --ext ts,tsx --fix",
-    "lint:css": "stylelint '**/*.{css,scss,html}' --config config/.stylelintrc.json",
-    "lint:css:fix": "stylelint '**/*.{css,scss,html}' --config config/.stylelintrc.json --fix",
+    "lint:css": "stylelint '**/*.{css,scss}' --config config/.stylelintrc.json",
+    "lint:css:fix": "stylelint '**/*.{css,scss}' --config config/.stylelintrc.json --fix",
     "type-check": "tsc --project config/tsconfig.json --noEmit",
     "test": "vitest --config config/vitest.config.ts",
     "test:ui": "vitest --config config/vitest.config.ts --ui",
@@ -26,8 +26,10 @@
     "validate": "npm run type-check && npm run lint && npm run test:run"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.13",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.13"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
@@ -66,8 +68,11 @@
       "eslint --config config/eslint.config.js --fix",
       "prettier --config config/.prettierrc --write"
     ],
-    "*.{css,scss,html}": [
+    "*.{css,scss}": [
       "stylelint --config config/.stylelintrc.json --fix",
+      "prettier --config config/.prettierrc --write"
+    ],
+    "*.html": [
       "prettier --config config/.prettierrc --write"
     ],
     "*.{json,md}": [

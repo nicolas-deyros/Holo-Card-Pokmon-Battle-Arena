@@ -133,11 +133,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         style={cardStyle}
         className={`holo-card ${isFainted ? 'grayscale opacity-60' : ''} ${isHit ? 'animate-shake' : ''}`}
       >
+        <div className="holo-card-pokemon-image" />
         <div className="holo-card-content">
           <div className="holo-card-header">
             <div>
               <h2 className="holo-card-name">{pokemon.name}</h2>
-              {displayMode !== 'hand' && (
+              {displayMode === 'full' && (
                 <div className="type-badge-container">
                   {pokemon.types.map(t => (
                     <TypeBadge key={t.type.name} typeName={t.type.name} />
@@ -145,22 +146,42 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 </div>
               )}
             </div>
-            {displayMode !== 'hand' && (
-              <div className="holo-card-hp-info">
+            {displayMode === 'full' && (
+              <div className="holo-card-hp-info flex items-center gap-2">
                 <span className="holo-card-hp-text">HP</span>
                 <span className="holo-card-hp-value">
-                  {' '}
                   {pokemon.hp}/{pokemon.maxHp}
                 </span>
-                <div className="holo-card-hp-bar-container">
-                  <div
-                    className={`holo-card-hp-bar ${hpPercentage > 50 ? 'bg-green-500' : hpPercentage > 20 ? 'bg-yellow-500' : 'bg-red-600'}`}
-                    style={{ width: `${hpPercentage}%` }}
-                  />
-                </div>
+                <progress
+                  value={pokemon.hp}
+                  max={pokemon.maxHp}
+                  className={`flex-1 h-2 ${hpPercentage > 50 ? 'accent-green-500' : hpPercentage > 20 ? 'accent-yellow-500' : 'accent-red-600'}`}
+                />
               </div>
             )}
           </div>
+
+          {/* Bottom section for compact mode - type badges and HP info below Pokemon image */}
+          {displayMode === 'compact' && (
+            <div className="holo-card-bottom-info">
+              <div className="type-badge-container">
+                {pokemon.types.map(t => (
+                  <TypeBadge key={t.type.name} typeName={t.type.name} />
+                ))}
+              </div>
+              <div className="holo-card-hp-info flex items-center gap-2">
+                <span className="holo-card-hp-text">HP</span>
+                <span className="holo-card-hp-value">
+                  {pokemon.hp}/{pokemon.maxHp}
+                </span>
+                <progress
+                  value={pokemon.hp}
+                  max={pokemon.maxHp}
+                  className={`flex-1 h-2 ${hpPercentage > 50 ? 'accent-green-500' : hpPercentage > 20 ? 'accent-yellow-500' : 'accent-red-600'}`}
+                />
+              </div>
+            </div>
+          )}
 
           {displayMode === 'full' && (
             <div className="holo-card-footer">
